@@ -1,26 +1,27 @@
 from flask import Flask,request
 import requests
-
 from api import getGitStat
 
 import os
 app =Flask(__name__)
 
+# This method accepts the argumemnts sent in slack command
+# and calls getGitStat method in api.py to process the json
+# data of the stats for the Github repository within date
+# limits provided by the caller.
+
 @app.route('/', methods=['POST','GET'])
 def handle_data():
-    text= request.args["text"].split("/")
+
+    text= request.args["text"].split(" ")
     user = text[0]
     repo = text[1]
     sinD = text[2]
     untD = text[3]
-    temp =  getGitStat(user,repo,sinD,untD)
-    response_url = request.args["response_url"]
-    print response_url
-    headers = { "content-type":"application/json"}
-    postStatus = requests.post(url=response_url,data=temp,headers=headers)
-    print postStatus.status_code
+
+    temp =  getGitStat(user, repo, sinD, untD)
+
     print temp
-    #return "hello"
     return temp
 
 
