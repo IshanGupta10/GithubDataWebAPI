@@ -26,15 +26,16 @@ def handle_data():
                 'Your Github Username', 'Your Github Password'))
 
     if(first_response.status_code == 200 and sinD < untD and second_response.status_code == 200):
+    
         temp =  getGitStat(user,repo,sinD,untD)
         response_url = request.args["response_url"]
-        #print response_url
+    
         headers = { "content-type":"application/json"}
         postStatus = requests.post(url=response_url,data=temp,headers=headers)
-        #print postStatus.status_code
+    
         print temp
-        #return "hello"
         return temp
+    
     else:
         return "Please enter correct details. Check if the username or reponame exists, and/or Starting date < End date. Also, date format should be MM-DD"
 
