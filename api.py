@@ -11,7 +11,7 @@ from collections import OrderedDict
 
 
 def getGitStat(username, repo, sinD, untD):
-    
+
     user = username
     reponame = repo
     sin = "2016-" + sinD + 'T00:00:00Z'
@@ -49,21 +49,19 @@ def getGitStat(username, repo, sinD, untD):
 
             assert commit_values.status_code == 200
 
-	        comm = commit_values.json()
+            comm = commit_values.json()
 
-	        # var = str(comm['stats']['additions']) + ' ' + str(comm['stats']['deletions']) + ' ' + str(comm['stats']['total'])
+            details['name'] = str(commit['commit']['committer']['name'])
+            details['date'] = str(commit['commit']['committer']['date'])
+            details['sha'] = str(commit['sha'])
+            details['i_val'] = 'Additions : ' + \
+                str(comm['stats']['additions'])
+            details['d_val'] = 'Deletions : ' + \
+                str(comm['stats']['deletions'])
 
-	        # total.append(var)
-
-	        details['name'] = str(commit['commit']['committer']['name'])
-	        details['date'] = str(commit['commit']['committer']['date'])
-	        details['sha'] = str(commit['sha'])
-	        details['i_val'] = 'Additions : ' + str(comm['stats']['additions'])
-	        details['d_val'] = 'Deletions : ' + str(comm['stats']['deletions'])
-
-	        conv = str(commit['commit']['committer']['name']) + ' ' + str(commit['commit']['committer']['date']) + \
-	            ' ' + str(commit['sha']) + ' ' + str(comm['stats']['additions']) + ' ' + str(comm['stats']['deletions'])
-	        data['results'].append(conv)
+            conv = str(commit['commit']['committer']['name']) + ' ' + str(commit['commit']['committer']['date']) + \
+                ' ' + str(commit['sha']) + ' ' + str(comm['stats']['additions']) + ' ' + str(comm['stats']['deletions'])
+            data['results'].append(conv)
 
             counter += 1
 
