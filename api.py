@@ -4,17 +4,18 @@ import json
 from collections import OrderedDict
 
 # This function is called when the server recieves the request
-# with username, repo name, starting date, and ending date. 
-# Using these parameters it returns 
+# with username, repo name, starting date, and ending date.
+# Using these parameters it returns
 # Name of committer Date of Commit SHA value in a form of
 # json data dump.
 
 
 def getGitStat(username, repo, sinD, untD):
+    
     user = username
     reponame = repo
-    sin = "2016-"+sinD+'T00:00:00Z'
-    unt = "2016-"+untD+'T00:00:00Z'
+    sin = "2016-" + sinD + 'T00:00:00Z'
+    unt = "2016-" + untD + 'T00:00:00Z'
 
     data = {'results': []}
     page = 1
@@ -39,8 +40,18 @@ def getGitStat(username, repo, sinD, untD):
 
         for commit in second_response.json():
 
-            conv = str(commit['commit']['committer']['name']) + ' ' + str(commit['commit']['committer']['date']) + \
-                ' ' + str(commit['sha'])
+            sha_commits_path = 'https://api.github.com/repos/' + user + \
+                '/' + reponame + '/commits/' + commit['sha']
+            commit_values = requests.get(
+                sha_commits_path, auth=(
+                    'Your Github Username', 'Your Github Password'))
+
+            assert commit_values.status_code == 200
+
+            comm = commit_values.json()
+
+            conv = str(commit['commit']['committer']['name']) + ' ' + \
+                str(commit['commit']['committer']['date']) + ' ' + str(commit['sha'])
             data['results'].append(conv)
 
             counter += 1
