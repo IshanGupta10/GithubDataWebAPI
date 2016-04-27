@@ -5,24 +5,38 @@ from api import getGitStat
 import os
 app =Flask(__name__)
 
-# This method accepts the argumemnts sent in slack command
-# and calls getGitStat method in api.py to process the json
-# data of the stats for the Github repository within date
-# limits provided by the caller.
 
 @app.route('/', methods=['POST','GET'])
 def handle_data():
-
     text= request.args["text"].split(" ")
     user = text[0]
     repo = text[1]
     sinD = text[2]
     untD = text[3]
 
-    temp =  getGitStat(user, repo, sinD, untD)
+    user_repo_path = 'https://api.github.com/users/' + user + '/repos'
+    first_response = requests.get(
+        user_repo_path, auth=(
+            'Your Github Username', 'Your Github Password'))
 
-    print temp
-    return temp
+    repo_commits_path = 'https://api.github.com/repos/' + user + '/' + repo + \
+            '/commits'
+    second_response = requests.get(
+        repo_commits_path, auth=(
+                'Your Github Username', 'Your Github Password'))
+
+    if(first_response.status_code == 200 and sinD < untD and second_response.status_code == 200):
+        temp =  getGitStat(user,repo,sinD,untD)
+        response_url = request.args["response_url"]
+        #print response_url
+        headers = { "content-type":"application/json"}
+        postStatus = requests.post(url=response_url,data=temp,headers=headers)
+        #print postStatus.status_code
+        print temp
+        #return "hello"
+        return temp
+    else:
+        return "Please enter correct details. Check if the username or reponame exists, and/or Starting date < End date. Also, date format should be MM-DD"
 
 
 if __name__ == "__main__":
