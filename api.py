@@ -14,15 +14,15 @@ def getGitStat(username, repo, sinD, untD):
 
     user = username
     reponame = repo
-    sin = "2016-" + sinD + 'T00:00:00Z'
-    unt = "2016-" + untD + 'T00:00:00Z'
+    sin = "2016-{}T00:00:00Z".format(sinD)
+    unt = "2016-{}T00:00:00Z".format(untD)
 
     data = {'results': []}
     details = {}
     page = 1
     counter = 0
 
-    user_repo_path = 'https://api.github.com/users/' + user + '/repos'
+    user_repo_path = "https://api.github.com/users/{}/repos".format(user)
     first_response = requests.get(
         user_repo_path, auth=(
             'Your Github Username', 'Your Github Password'))
@@ -31,8 +31,8 @@ def getGitStat(username, repo, sinD, untD):
 
     while(page < 10):
 
-        repo_commits_path = 'https://api.github.com/repos/' + user + '/' + reponame + \
-            '/commits?page=' + str(page) + '&per_page=100&until=' + unt + '&since=' + sin
+        repo_commits_path = "https://api.github.com/repos/{}/{}/commits?page={}&per_page=100&until={}&since={}".format(
+            user, reponame, str(page), untD, sinD)
         second_response = requests.get(
             repo_commits_path, auth=(
                 'Your Github Username', 'Your Github Password'))
@@ -41,8 +41,8 @@ def getGitStat(username, repo, sinD, untD):
 
         for commit in second_response.json():
 
-            sha_commits_path = 'https://api.github.com/repos/' + user + \
-                '/' + reponame + '/commits/' + commit['sha']
+            sha_commits_path = "https://api.github.com/repos/{}/{}/commits/{}".format(
+                user, reponame, commit['sha'])
             commit_values = requests.get(
                 sha_commits_path, auth=(
                     'Your Github Username', 'Your Github Password'))
@@ -51,16 +51,8 @@ def getGitStat(username, repo, sinD, untD):
 
             comm = commit_values.json()
 
-            details['name'] = str(commit['commit']['committer']['name'])
-            details['date'] = str(commit['commit']['committer']['date'])
-            details['sha'] = str(commit['sha'])
-            details['i_val'] = 'Additions : ' + \
-                str(comm['stats']['additions'])
-            details['d_val'] = 'Deletions : ' + \
-                str(comm['stats']['deletions'])
-
-            conv = str(commit['commit']['committer']['name']) + ' ' + str(commit['commit']['committer']['date']) + \
-                ' ' + str(commit['sha']) + ' ' + str(comm['stats']['additions']) + ' ' + str(comm['stats']['deletions'])
+            conv = "{} {} {}".format(commit['commit']['committer']['name'], commit[
+                                     'commit']['committer']['date'], commit['sha'])
             data['results'].append(conv)
 
             counter += 1
