@@ -26,7 +26,7 @@ def handle_data():
         temp = getGitStat(params[0], params[1], params[2], params[3])
         response_url = request.args["response_url"]
 
-        headers = {"content-type": "application/json"}
+        headers = {"Content-type": "application/json"}
         postStatus = requests.post(
             url=response_url, data=temp, headers=headers)
 
@@ -35,6 +35,31 @@ def handle_data():
 
     else:
         return "Please enter correct details. Check if the username or reponame exists, and/or Starting date < End date. Also, date format should be MM-DD"
+
+
+@app.route('/createissue/<token>', methods=['POST', 'GET'])
+def create_Issue(token):
+    params = request.args["text"].split(" | ")
+    value = createIssue(params[0], params[1], token, params[2])
+    return value
+
+
+@app.route('/closeissue/<token>', methods=['POST', 'GET'])
+def create_Issue(token):
+    params = request.args["text"].split(" | ")
+    value = createIssue(params[0], params[1], params[2], token, params[3])
+    return value
+
+
+@app.route('/helpgit', methods=['POST', 'GET'])
+def help_git():
+    value = "****************************************\n \
+            Git Commands Helper for Squadrun \n \
+            **************************************** \n \
+            /get_git : Username Reponame StartDate(MM-DD) EndDate(MM-DD) \n \
+            /createissue : Username | Reponame | Title, Body, Assignee, Milestones, Labels    Copy this format and replace the values of your need. \n \
+            /closeissue : Username | Reponame | IssueNumber Copy this format and replace the values of your need."
+    return value
 
 
 if __name__ == "__main__":

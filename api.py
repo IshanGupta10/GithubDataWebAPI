@@ -18,6 +18,7 @@ def getGitStat(username, repo, sinD, untD):
     unt = "2016-{}T00:00:00Z".format(untD)
 
     data = {'results': []}
+    strings = []
     details = {}
     page = 1
     counter = 0
@@ -53,10 +54,11 @@ def getGitStat(username, repo, sinD, untD):
 
             conv = "{} {} {}".format(commit['commit']['committer']['name'], commit[
                                      'commit']['committer']['date'], commit['sha'])
-            data['results'].append(conv)
+            strings.append(conv)
 
             counter += 1
 
         page += 1
 
+    data['results'] = strings
     return json.dumps(data)
