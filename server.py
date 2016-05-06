@@ -1,8 +1,11 @@
 from flask import Flask, request
-import requests
 from api import getGitStat
+from createIssue import createIssue
+from closeIssue import closeIssue
 
 import os
+import requests
+
 app = Flask(__name__)
 
 
@@ -45,9 +48,9 @@ def create_Issue(token):
 
 
 @app.route('/closeissue/<token>', methods=['POST', 'GET'])
-def create_Issue(token):
+def closee_Issue(token):
     params = request.args["text"].split(" | ")
-    value = createIssue(params[0], params[1], params[2], token, params[3])
+    value = closeIssue(params[0], params[1], params[2], token, params[3])
     return value
 
 
