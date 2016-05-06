@@ -1,5 +1,5 @@
 from flask import Flask, request
-from api import getGitStat
+from gitStat import getGitStat
 from createIssue import createIssue
 from closeIssue import closeIssue
 
@@ -61,7 +61,7 @@ def help_git():
             **************************************** \n \
             /get_git : Username Reponame StartDate(MM-DD) EndDate(MM-DD) \n \
             /createissue : Username | Reponame | Title, Body, Assignee, Milestones, Labels    Copy this format and replace the values of your need. \n \
-            /closeissue : Username | Reponame | IssueNumber Copy this format and replace the values of your need."
+            /closeissue : Username | Reponame | IssueNumber | Title, Body, Assignee, Milestones, Labels		Copy this format and replace the values of your need."
     return value
 
 
