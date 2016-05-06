@@ -48,7 +48,7 @@ def create_Issue(token):
 
 
 @app.route('/closeissue/<token>', methods=['POST', 'GET'])
-def closee_Issue(token):
+def close_Issue(token):
     params = request.args["text"].split(" | ")
     value = closeIssue(params[0], params[1], params[2], token, params[3])
     return value
