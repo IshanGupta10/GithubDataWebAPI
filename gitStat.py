@@ -1,7 +1,6 @@
 import sys
 import requests
 import json
-from collections import OrderedDict
 
 # This function is called when the server recieves the request
 # with username, repo name, starting date, and ending date.
@@ -17,7 +16,6 @@ def getGitStat(username, repo, sinD, untD):
     sin = "2016-{}T00:00:00Z".format(sinD)
     unt = "2016-{}T00:00:00Z".format(untD)
 
-    data = {'results': []}
     strings = []
     details = {}
     page = 1
@@ -33,7 +31,7 @@ def getGitStat(username, repo, sinD, untD):
     while(page < 10):
 
         repo_commits_path = "https://api.github.com/repos/{}/{}/commits?page={}&per_page=100&until={}&since={}".format(
-            user, reponame, str(page), untD, sinD)
+            user, reponame, str(page), unt, sin)
         second_response = requests.get(
             repo_commits_path, auth=(
                 'Your Github Username', 'Your Github Password'))
@@ -54,11 +52,11 @@ def getGitStat(username, repo, sinD, untD):
 
             conv = "{} {} {}".format(commit['commit']['committer']['name'], commit[
                                      'commit']['committer']['date'], commit['sha'])
-            strings.append(conv)
+            strings = "{}{} \n".format(strings, conv)
+
 
             counter += 1
 
         page += 1
 
-    data['results'] = strings
-    return json.dumps(data)
+    return strings

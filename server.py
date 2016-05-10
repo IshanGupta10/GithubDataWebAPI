@@ -1,4 +1,6 @@
-from flask import Flask, request
+from flask import Flask, request\
+from redis import redis
+from celery import Celery
 from gitStat import getGitStat
 from createIssue import createIssue
 from closeIssue import closeIssue
@@ -26,18 +28,29 @@ def handle_data():
 
     if(first_response.status_code == 200 and params[2] < params[3] and second_response.status_code == 200):
 
-        temp = getGitStat(params[0], params[1], params[2], params[3])
+        values = getGitStat(params[0], params[1], params[2], params[3])
+        
         response_url = request.args["response_url"]
 
-        headers = {"Content-type": "application/json"}
-        postStatus = requests.post(
-            url=response_url, data=temp, headers=headers)
+        payload = {
+            "response_type": "in_channel",
+            "text": "Github Repo Commits Status",
+            "attachments": [
+                {
+                    "text": values
+                }
+                    ]
+            }
 
-        print temp
-        return temp
+        headers = {'Content-Type': 'application/json',
+                'User-Agent': 'Mozilla /5.0 (Compatible MSIE 9.0;Windows NT 6.1;WOW64; Trident/5.0)'}
+
+        response = requests.post(response_url, json = test, headers = headers)
 
     else:
-        return "Please enter correct details. Check if the username or reponame exists, and/or Starting date < End date. Also, date format should be MM-DD"
+        
+        return "Please enter correct details. Check if the username or reponame exists, and/or Starting date < End date. \
+                Also, date format should be MM-DD"
 
 
 @app.route('/createissue/<token>', methods=['POST', 'GET'])
@@ -59,7 +72,7 @@ def help_git():
     value = "****************************************\n \
             Git Commands Helper for Squadrun \n \
             **************************************** \n \
-            /get_git : Username Reponame StartDate(MM-DD) EndDate(MM-DD) \n \
+            /gitstats : Username Reponame StartDate(MM-DD) EndDate(MM-DD) \n \
             /createissue : Username | Reponame | Title, Body, Assignee, Milestones, Labels    Copy this format and replace the values of your need. \n \
             /closeissue : Username | Reponame | IssueNumber | Title, Body, Assignee, Milestones, Labels		Copy this format and replace the values of your need."
     return value
