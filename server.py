@@ -11,6 +11,7 @@ import os
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=['POST', 'GET'])
 def handle_data():
     params = request.args["text"].split(" ")
@@ -21,24 +22,33 @@ def handle_data():
         user_repo_path, auth=(
             'IshanGupta10', 'explosmrob10'))
 
-    repo_commits_path = "https://api.github.com/repos/{}/{}/commits".format(params[0], params[1])
+    repo_commits_path = "https://api.github.com/repos/{}/{}/commits".format(params[
+                                                                            0], params[1])
     second_response = requests.get(
         repo_commits_path, auth=(
             'IshanGupta10', 'explosmrob10'))
 
-    if(first_response.status_code == 200 and params[2] < params[3] and second_response.status_code == 200): 
-        
-	response_url = request.args["response_url"]
-	
+    if(first_response.status_code == 200 and params[2] < params[3] and second_response.status_code == 200):
+
+        response_url = request.args["response_url"]
+
     print "{} {} {} {} {}".format(params[0], params[1], params[2], params[3], response_url)
-    
-    thread1 = threading.Thread(target = getGitStat, args = (params[0], params[1], params[2], params[3], response_url))	
-	thread1.start()
+
+    thread1 = threading.Thread(
+        target=getGitStat,
+        args=(
+            params[0],
+            params[1],
+            params[2],
+            params[3],
+            response_url))
+    thread1.start()
 
         return "Please wait... Your data will be coming soon."
 
     else:
-        return "Please enter correct details. Check if the username or reponame exists, and/or Starting date < End date. Also, date format should be MM-DD"
+        return "Please enter correct details. Check if the username or reponame exists, and/or Starting date < End date. \
+                Also, date format should be MM-DD"
 
 
 @app.route('/createissue/<token>', methods=['POST', 'GET'])
@@ -54,9 +64,10 @@ def close_Issue(token):
     value = closeIssue(params[0], params[1], params[2], token, params[3])
     return value
 
+
 @app.route('/helpgit', methods=['POST', 'GET'])
 def help_git():
-    value = 	"****************************************\n \
+    value =  "****************************************\n \
 Git Commands Helper for Squadrun \n \
 **************************************** \n \
 /gitstats : Username Reponame StartDate(MM-DD) EndDate(MM-DD) \n \
@@ -67,4 +78,3 @@ Git Commands Helper for Squadrun \n \
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80, debug=True)
-
