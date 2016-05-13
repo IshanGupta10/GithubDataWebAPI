@@ -32,17 +32,18 @@ def handle_data():
 
         response_url = request.args["response_url"]
 
-    print "{} {} {} {} {}".format(params[0], params[1], params[2], params[3], response_url)
+            print "{} {} {} {} {}".format(params[0], params[1], params[2], params[3], response_url)
 
-    thread1 = threading.Thread(
-        target=getGitStat,
-        args=(
-            params[0],
-            params[1],
-            params[2],
-            params[3],
-            response_url))
-    thread1.start()
+            git_thread = threading.Thread(
+                target=getGitStat,
+                args=(
+                    params[0],
+                    params[1],
+                    params[2],
+                    params[3],
+                    response_url))
+
+            git_thread.start()
 
         return "Please wait... Your data will be coming soon."
 

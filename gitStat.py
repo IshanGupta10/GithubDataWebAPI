@@ -8,6 +8,7 @@ import threading
 # Name of committer Date of Commit SHA value in a form of
 # json data dump.
 
+
 def getGitStat(username, repo, sinD, untD, response_url):
 
     user = username
@@ -51,7 +52,7 @@ def getGitStat(username, repo, sinD, untD, response_url):
 
             conv = "{} {} {}".format(commit['commit']['committer']['name'], commit[
                                      'commit']['committer']['date'], commit['sha'])
-            
+
             strings = "{}{}\n".format(strings, conv)
 
             counter += 1
@@ -61,8 +62,8 @@ def getGitStat(username, repo, sinD, untD, response_url):
     # response_url = request.args["response_url"]
 
     if not strings:
-    	strings = "No commits were made between the given date interval"
-    
+        strings = "No commits were made between the given date interval"
+
     response_url = response_url
 
     payload = {
@@ -72,10 +73,11 @@ def getGitStat(username, repo, sinD, untD, response_url):
             {
                 "text": strings
             }
-                ]
-        }
+        ]
+    }
 
-    headers = {'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla /5.0 (Compatible MSIE 9.0;Windows NT 6.1;WOW64; Trident/5.0)'}
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla /5.0 (Compatible MSIE 9.0;Windows NT 6.1;WOW64; Trident/5.0)'}
 
-    response = requests.post(response_url, json = payload, headers = headers)
+    response = requests.post(response_url, json=payload, headers=headers)
