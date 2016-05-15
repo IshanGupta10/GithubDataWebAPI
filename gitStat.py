@@ -45,8 +45,7 @@ def getGitStat(username, repo, sinD, untD, response_url, token):
             sha_commits_path = "https://api.github.com/repos/{}/{}/commits/{}".format(
                 user, reponame, commit['sha'])
             commit_values = requests.get(
-                sha_commits_path, auth=(
-                    'IshanGupta10', 'explosmrob10'))
+                sha_commits_path, headers = headers)
 
             assert commit_values.status_code == 200
 
