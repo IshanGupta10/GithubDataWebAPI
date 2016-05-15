@@ -12,21 +12,24 @@ import os
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST', 'GET'])
-def handle_data():
+@app.route('/<token>', methods=['POST', 'GET'])
+def handle_data(token):
     params = request.args["text"].split(" ")
     url = request.args["response_url"]
 
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla /5.0 (Compatible MSIE 9.0;Windows NT 6.1;WOW64; Trident/5.0)',
+        'Authorization': 'token %s' % token}
+
     user_repo_path = "https://api.github.com/users/{}/repos".format(params[0])
     first_response = requests.get(
-        user_repo_path, auth=(
-            'IshanGupta10', 'explosmrob10'))
+        user_repo_path, headers = headers)
 
     repo_commits_path = "https://api.github.com/repos/{}/{}/commits".format(params[
                                                                             0], params[1])
     second_response = requests.get(
-        repo_commits_path, auth=(
-            'IshanGupta10', 'explosmrob10'))
+        repo_commits_path, headers = headers)
 
     if(first_response.status_code == 200 and params[2] < params[3] and second_response.status_code == 200):
 
