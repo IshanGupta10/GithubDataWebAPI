@@ -34,7 +34,7 @@ def handle_data(token):
 
         response_url = request.args["response_url"]
 
-            print "{} {} {} {} {}".format(params[0], params[1], params[2], params[3], response_url)
+            print "{} {} {} {} {}".format(params[0], params[1], params[2], params[3], response_url, token)
 
             git_thread = threading.Thread(
                 target=getGitStat,
@@ -43,7 +43,8 @@ def handle_data(token):
                     params[1],
                     params[2],
                     params[3],
-                    response_url))
+                    response_url,
+                    token))
 
             git_thread.start()
 

@@ -9,7 +9,7 @@ import threading
 # json data dump.
 
 
-def getGitStat(username, repo, sinD, untD, response_url):
+def getGitStat(username, repo, sinD, untD, response_url, token):
 
     user = username
     reponame = repo
@@ -21,10 +21,13 @@ def getGitStat(username, repo, sinD, untD, response_url):
     page = 1
     counter = 0
 
+    headers = {
+        'User-Agent': 'Mozilla /5.0 (Compatible MSIE 9.0;Windows NT 6.1;WOW64; Trident/5.0)',
+        'Authorization': 'token %s' % token}
+
     user_repo_path = "https://api.github.com/users/{}/repos".format(user)
     first_response = requests.get(
-        user_repo_path, auth=(
-            'IshanGupta10', 'explosmrob10'))
+        user_repo_path, headers = headers)
 
     assert first_response.status_code == 200
 
@@ -33,8 +36,7 @@ def getGitStat(username, repo, sinD, untD, response_url):
         repo_commits_path = "https://api.github.com/repos/{}/{}/commits?page={}&per_page=100&until={}&since={}".format(
             user, reponame, str(page), unt, sin)
         second_response = requests.get(
-            repo_commits_path, auth=(
-                'IshanGupta10', 'explosmrob10'))
+            repo_commits_path, headers = headers)
 
         assert second_response.status_code == 200
 
