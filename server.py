@@ -18,7 +18,6 @@ def handle_data(token):
     url = request.args["response_url"]
 
     headers = {
-        'Content-Type': 'application/json',
         'User-Agent': 'Mozilla /5.0 (Compatible MSIE 9.0;Windows NT 6.1;WOW64; Trident/5.0)',
         'Authorization': 'token %s' % token}
 
